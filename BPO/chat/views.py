@@ -7,7 +7,7 @@ from .grapher import graphGenerator
 
 def chat(request):
     #GEMINI API 
-    geni.configure(api_key="AIzaSyDfpZo68ofnS6JcAuxLyTUcy-fYjXMwjiE")
+    geni.configure(api_key="KEY")
     generation_config = {
         "temperature": 0.9,
         "top_p": 0.95,
