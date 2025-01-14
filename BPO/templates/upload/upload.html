@@ -1,0 +1,17 @@
+{% extends 'home/base.html' %}
+
+{% block Upload %}
+{% endblock %}
+
+{% block body %}
+    <h1 class="upload-heading">Upload Excel File</h1>
+    <div class="form-container">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.as_p }}
+            </div>
+            <button type="submit" class="submit-btn">Upload</button>
+        </form>
+    </div>
+{% endblock %}

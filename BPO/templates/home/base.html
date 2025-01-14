@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% block title %}
+        {% endblock %}
+    </title>
+    <style>
+        .nav-bar {
+            background-color: #333;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            color: white;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 50px; /* Sidebar is partially visible */
+            height: 100%;
+            background-color: #333;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            transition: width 0.3s ease;
+            overflow: hidden;
+            z-index: 10;
+            font-size: 50px;
+        }
+
+        .sidebar:hover {
+            width: 250px; /* Sidebar expands on hover */
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 10px 20px;
+            width: 100%;
+            text-align: left;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, padding-left 0.3s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sidebar a:hover {
+            background-color: #575757;
+            padding-left: 30px;
+        }
+
+        .sidebar .icon {
+            font-size: 30px;
+            margin-right: 10px;
+            transition: margin 0.3s ease;
+        }
+
+        .sidebar:hover .icon {
+            margin-right: 20px;
+        }
+
+        main {
+            margin-left: 60px;
+            transition: margin-left 0.3s ease;
+            padding: 20px;
+        }
+
+        .sidebar:hover ~ main {
+            margin-left: 250px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 50px;
+            }
+
+            .sidebar:hover {
+                width: 200px;
+            }
+
+            main {
+                margin-left: 50px;
+            }
+
+            .sidebar:hover ~ main {
+                margin-left: 200px;
+            }
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .complaintCardContainer {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;       /* Adds space between the cards */
+            justify-content: flex-start; /* Align cards to the start */
+            padding: 20px;
+        }
+
+        .complaintCard {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 22%;    /* Each card will take 22% of the container's width */
+            min-width: 180px; /* Minimum width to keep cards responsive */
+            margin: 0;      /* Remove margin to ensure clean layout */
+        }
+
+        .complaintCard:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        @media (max-width: 768px) {
+            .complaintCardContainer {
+                padding: 10px; /* Reduce padding on smaller screens */
+            }
+
+            .complaintCard {
+                width: 48%; /* Each card takes 48% width on smaller screens */
+                min-width: 150px; /* Adjust the minimum width on smaller screens */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .complaintCard {
+                width: 100%; /* Cards take full width on very small screens */
+            }
+        }
+        .complaintCard > * + * {
+            margin-top: 8px;
+        }
+        .upload-heading {
+        text-align: center;
+        color: #333;
+        margin-top: 30px;
+        font-size: 2rem;
+        font-weight: bold;
+    }
+
+    .form-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 80vh;
+        padding: 20px;
+        margin-top: -70px;
+    }
+
+    form {
+        background-color: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 1px 4px 10px rgba(0, 0, 0,0.8);
+        width: 100%;
+        max-width: 500px;
+    }
+    .form-group input[type="file"] {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+        margin-top: 8px;
+        margin-bottom: 20px;
+    }
+
+    .submit-btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        width: 100%;
+        transition: background-color 0.3s ease;
+    }
+
+    .submit-btn:hover {
+        background-color: #45a049;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .form-container {
+            height: auto;
+            padding: 10px;
+        }
+
+        form {
+            width: 100%;
+            max-width: 100%;
+            padding: 20px;
+        }
+    }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <a href="home"><span class="icon">🏠</span> Home</a>
+        <a href="talk"><span class="icon">💬</span> Talk</a>
+        <a href="upload"><span class="icon">⬆️</span> Upload</a>
+        <a href="complaints"><span class="icon">📋</span> Complaints</a>
+        <a href="chat"><span class="icon">🧠</span> Knowly</a>
+    </div>
+
+    <main>
+        {% block body %}
+        {% endblock %}
+    </main>
+</body>
+</html>
